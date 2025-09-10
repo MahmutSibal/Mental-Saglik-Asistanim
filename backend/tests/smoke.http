@@ -1,0 +1,35 @@
+### Health
+GET http://localhost:8000/health
+
+### Register
+POST http://localhost:8000/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "secret123",
+  "name": "Test User"
+}
+
+### Login
+POST http://localhost:8000/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username=test@example.com&password=secret123
+
+### Analyze (requires token)
+POST http://localhost:8000/analyze
+Content-Type: application/json
+Authorization: Bearer <TOKEN>
+
+{
+  "text": "I feel a bit anxious but hopeful today."
+}
+
+### Weekly mood
+GET http://localhost:8000/mood/weekly
+Authorization: Bearer <TOKEN>
+
+### Suggest
+GET http://localhost:8000/suggest/joy
+Authorization: Bearer <TOKEN>
