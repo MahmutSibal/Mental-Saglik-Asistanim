@@ -1,6 +1,22 @@
 <script setup lang="ts">
 const { $axios } = useNuxtApp() as any
 const profile = ref<{ name?: string; email?: string; avatar_url?: string }>({})
+const fullAvatarUrl = computed(() => {
+  const url = profile.value.avatar_url
+  if (!url) return '/avatar-placeholder.svg'
+  try {
+    // If backend returned relative /uploads/..., prefix with API base
+    if (url.startsWith('/uploads')) {
+      const { public } = useRuntimeConfig()
+      const base = public.apiBase as string
+      if (/^https?:\/\//i.test(base)) return new URL(url, base).toString()
+      return url
+    }
+    return url
+  } catch {
+    return '/avatar-placeholder.svg'
+  }
+})
 const msg = ref('')
 const err = ref('')
 
@@ -68,7 +84,7 @@ const onAvatar = async (evt: Event) => {
 
       <!-- Avatar -->
       <div class="flex items-center gap-4 mb-6">
-        <img :src="profile.avatar_url || 'https://via.placeholder.com/80'" alt="avatar" class="w-20 h-20 rounded-full object-cover border shadow-soft transition-transform duration-300 hover:scale-105" />
+  <img :src="fullAvatarUrl" alt="avatar" class="w-20 h-20 rounded-full object-cover border shadow-soft transition-transform duration-300 hover:scale-105" />
         <label class="btn-ghost cursor-pointer">
           <input type="file" accept="image/*" class="hidden" @change="onAvatar" />
           Fotoğrafı Değiştir
