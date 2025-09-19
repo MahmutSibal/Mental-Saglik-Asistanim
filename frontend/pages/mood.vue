@@ -19,7 +19,7 @@ watch(view, load, { immediate: true })
 const chartData = computed(() => ({
   labels: points.value.map(p => new Date(p.timestamp).toLocaleDateString()),
   datasets: [{
-    label: 'Mood',
+    label: 'Ruh Hali',
     data: points.value.map(p => Object.keys(distribution.value).indexOf(p.label)),
     borderColor: '#0ea5e9'
   }]

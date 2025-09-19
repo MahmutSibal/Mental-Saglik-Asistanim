@@ -2,22 +2,9 @@ import axios from 'axios'
 
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
-  let baseURL: string | undefined = config.public.apiBase as any
-  // Normalize baseURL on client if protocol/host is missing
-  if (process.client && baseURL && !/^https?:\/\//i.test(baseURL)) {
-    const origin = window.location.origin
-    if (baseURL.startsWith(':')) {
-      // e.g. ":8000" -> attach to current host
-      const host = new URL(origin)
-      baseURL = `${host.protocol}//${host.hostname}${baseURL}`
-    } else if (baseURL.startsWith('/')) {
-      baseURL = origin + baseURL
-    } else {
-      baseURL = origin
-    }
-  }
-
-  const instance = axios.create({ baseURL })
+  const instance = axios.create({
+    baseURL: config.public.apiBase,
+  })
 
   instance.interceptors.request.use((req) => {
     if (process.client) {

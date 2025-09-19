@@ -68,7 +68,7 @@ const onAvatar = async (evt: Event) => {
 
       <!-- Avatar -->
       <div class="flex items-center gap-4 mb-6">
-  <img :src="profile.avatar_url || '/avatar-placeholder.svg'" alt="avatar" class="w-20 h-20 rounded-full object-cover border shadow-soft transition-transform duration-300 hover:scale-105" />
+        <img :src="profile.avatar_url || 'https://via.placeholder.com/80'" alt="avatar" class="w-20 h-20 rounded-full object-cover border shadow-soft transition-transform duration-300 hover:scale-105" />
         <label class="btn-ghost cursor-pointer">
           <input type="file" accept="image/*" class="hidden" @change="onAvatar" />
           Fotoğrafı Değiştir

@@ -25,4 +25,10 @@ class Settings(BaseSettings):
     USE_TR_EN_TRANSLATION: bool = True
     HF_TR_EN_MODEL: str = "Helsinki-NLP/opus-mt-tr-en"
 
+    # Spotify API (Client Credentials)
+    SPOTIFY_CLIENT_ID: str | None = None
+    SPOTIFY_CLIENT_SECRET: str | None = None
+    SPOTIFY_MARKET: str = "TR"  # default market
+    SPOTIFY_REDIRECT_URI: str | None = None  # optional; not needed for client credentials
+
 settings = Settings()

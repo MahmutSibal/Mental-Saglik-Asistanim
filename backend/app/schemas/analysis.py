@@ -11,3 +11,4 @@ class AnalyzeResult(BaseModel):
 class AnalyzeResponse(BaseModel):
     result: AnalyzeResult
     suggestion_text: Optional[str] = None
+    crisis: Optional[Dict[str, str | bool]] = None  # {flagged: bool, reason?: str}

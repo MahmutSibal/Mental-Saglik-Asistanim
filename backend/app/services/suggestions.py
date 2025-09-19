@@ -7,6 +7,7 @@ LABEL_ALIASES = {
     "sad": "sadness",
     "happy": "joy",
     "angry": "anger",
+    "uncertain": "uncertain",
 }
 
 SUGGESTION_FALLBACKS = {
@@ -17,6 +18,7 @@ SUGGESTION_FALLBACKS = {
     "disgust": "Hoşnutsuzluğun kaynağını yazın ve uzaklaşmak yerine küçük bir iyileştirme adımı belirleyin.",
     "surprise": "Beklenmedik durumdan ne öğrendiniz? 3 maddeyle not alın ve bir fırsat belirleyin.",
     "neutral": "5 dakikalık mindful mola verin ve vücut taraması yapın.",
+    "uncertain": "Hissettiğiniz duyguyu adlandırmakta zorlanmak normaldir. 3 nefes alın, şu soruları yazın: ‘Ne oldu? Ne hissediyorum? Ne istiyorum?’ Küçük bir iyi-oluş adımı seçin.",
 }
 
 

@@ -1,4 +1,6 @@
-from typing import Dict, List, TypedDict
+from typing import Dict, List, TypedDict, Tuple
+import re
+import unicodedata
 from ..core.config import settings
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline, MarianMTModel, MarianTokenizer
 
@@ -21,6 +23,11 @@ EMOTION_KEYWORDS: Dict[str, List[str]] = {
     "admiration": ["hayranım", "hayranlik", "takdir ediyorum"],
     "curiosity": ["merak ediyorum", "meraklıyım", "merakliyim"],
 }
+
+# Crisis patterns (very conservative; expand with care)
+CRISIS_PATTERNS: List[re.Pattern] = [
+    re.compile(r"intihar|kendimi\s*öldür|yasamak\s*istemiyorum|yaşamak\s*istemiyorum|kendime\s*zarar|bıçaklayacağım|atlayacağım", re.I),
+]
 
 # Global singletons
 _tokenizer = None
@@ -69,6 +76,32 @@ def translate_tr_en(text: str) -> str:
         return text
 
 
+def _strip_diacritics(s: str) -> str:
+    return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
+
+def _normalize_tr_text(text: str) -> str:
+    t = text.strip().lower()
+    # fold diacritics: ö->o, ü->u, ğ->g etc. for robust keyword match
+    t = _strip_diacritics(t)
+    # collapse repeated characters (cooook -> cook -> cok)
+    t = re.sub(r"(\w)\1{2,}", r"\1\1", t)
+    # common slang/variants
+    replacements = {
+        'cok': 'çok', 'cokuzgunum': 'çok üzgünüm', 'iyiyim': 'iyi yim',
+    }
+    for k, v in replacements.items():
+        t = t.replace(k, v)
+    return t
+
+
+def detect_crisis(text: str) -> Tuple[bool, str | None]:
+    t = text.lower()
+    for pat in CRISIS_PATTERNS:
+        if pat.search(t):
+            return True, "Kriz ifadesi tespit edildi"
+    return False, None
+
+
 def analyze_text(text: str) -> Dict[str, float]:
     # Primary path: translate Turkish to English if enabled, then analyze with English emotion model
     t = text
@@ -93,9 +126,19 @@ def top_label(scores: Dict[str, float]) -> str:
 
 
 def keyword_emotion(text: str) -> str | None:
-    t = text.lower()
+    t = _normalize_tr_text(text)
     for label, words in EMOTION_KEYWORDS.items():
         for w in words:
-            if w in t:
+            if _strip_diacritics(w) in t:
                 return label
     return None
+
+
+def is_uncertain(scores: Dict[str, float], threshold: float = 0.6, margin: float = 0.1) -> bool:
+    if not scores:
+        return True
+    top = max(scores.values())
+    # close second?
+    sorted_vals = sorted(scores.values(), reverse=True)
+    second = sorted_vals[1] if len(sorted_vals) > 1 else 0.0
+    return top < threshold or (top - second) < margin

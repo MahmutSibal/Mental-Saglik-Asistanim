@@ -30,3 +30,11 @@ def messages_collection():
 
 def suggestions_collection():
     return get_db()["suggestions"]
+
+
+def checkins_collection():
+    return get_db()["checkins"]
+
+
+def feedback_collection():
+    return get_db()["feedback"]

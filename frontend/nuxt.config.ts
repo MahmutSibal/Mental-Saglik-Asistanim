@@ -8,12 +8,12 @@ export default defineNuxtConfig({
   css: ['~/assets/css/tailwind.css'],
   runtimeConfig: {
     public: {
-  apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000'
     }
   },
   app: {
     head: {
-  title: 'Mental Asistanım',
+      title: 'Mental Asistanım',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'AI destekli ruh hali analizi ve öneriler' }
@@ -23,8 +23,8 @@ export default defineNuxtConfig({
   pwa: {
     registerType: 'autoUpdate',
     manifest: {
-  name: 'Mental Asistanım',
-  short_name: 'Mental',
+      name: 'Mental Asistanım',
+      short_name: 'MA',
   theme_color: '#89CFF0',
   background_color: '#F5F5F5',
       display: 'standalone',
